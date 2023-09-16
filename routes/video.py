@@ -24,14 +24,14 @@ def get_all_videos(current_user: dict = Depends(get_current_userinfo),
     
 
 
-@router.get("/video/{video_id}", response_model=VideoResponse, tags=["video"])
+@router.get("/video/{prid}", response_model=VideoResponse, tags=["video"])
 def get_video(current_user: dict = Depends(get_current_userinfo),
-                video_id:str = None,
+                prid:int = None,
                 db:Database = Depends(get_db))->VideoResponse:
     """
     Get a video by id
     """
-    response:VideoResponse = db.videos.find_one({"prid":video_id, "user_email":current_user["sub"]})
+    response:VideoResponse = db.videos.find_one({"prid":prid, "user_email":current_user["sub"]})
     if response:
         return response
     else:
