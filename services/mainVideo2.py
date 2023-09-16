@@ -40,8 +40,8 @@ def video():
     video_clip = VideoFileClip("finalBackground.mp4").set_duration(5)
     # Image file
     # image=ImageClip("https://upload.wikimedia.org/wikipedia/commons/1/1d/Football_Pallo_valmiina-cropped.jpg")
-    image=ImageClip("75_logo.png")
-    extraImages=ImageClip('PMmodi.png')
+    image=ImageClip("75_logo.jpeg")
+    extraImages=ImageClip('PMmodi.jpeg')
 
     audio=AudioFileClip('audio.mp3').set_duration(duration)
     print(audio,'audio')
