@@ -27,6 +27,7 @@ class VideoResponse(BaseModel):
     images: List[ImageInfo] = None
     text_list: List[str] = None
     language: str
+    release_language:List[str]=None
 
 
 class VideoListResponse(BaseModel):

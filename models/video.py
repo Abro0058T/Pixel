@@ -28,3 +28,4 @@ class Video(BaseModel):
     images: List[ImageInfo] = None
     text_list: List[str] = None
     language: str="English"
+    release_language:List[str]=None
