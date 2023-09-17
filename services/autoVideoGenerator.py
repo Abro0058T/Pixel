@@ -80,10 +80,12 @@ def addVideo(video_data,converted_data,latest_release_id):# runs only  when new 
 		"text_list":converted_data[1],
 		"languages":notice_data["releaseLanguage"]
 	}
-	result=collection.insert_one(data)
+	# finally update the video data with the given prid
+	result=collection.update_one({"prid":latest_release_id},{"$set":data})
 
 def addData(latest_release_id):
 	data={
 		"prid":latest_release_id,
 	}
-	result=collection.insert_data["data"]
+	# insert video data so that it status can be changed during video generation
+	result=collection.insert_one(data)
