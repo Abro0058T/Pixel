@@ -9,9 +9,9 @@ import pymongo
 
 client = pymongo.MongoClient("mongodb://localhost:27017/")
 
-db=client['databasename']
+db=client['pixel']
 
-collection=db['collection_name']
+collection=db['videos']
 # setting the URL you want to monitor
 
 
