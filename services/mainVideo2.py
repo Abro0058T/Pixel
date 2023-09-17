@@ -15,8 +15,8 @@ cloudinary.config(
     api_secret="58BTwHOeZPJ8yit4XbTJ9CtYw4w"
 )
 
-
-
+# Add custom header and ministart 
+# 
 from pydub import AudioSegment
 import zlib
 
@@ -27,7 +27,6 @@ def video(images,texts):
     final_text=""
     azure_final_text=""
     for text in texts:
-  
         final_text+=text["text"]+"\t"+"\n"
         azure_final_text+=text["azure_text"]
         audio_text.append({"text":text["azure_text"],"voice_gender":"Female"})
@@ -159,7 +158,7 @@ text=[
 ]
 
 def convertData(id):
-    relese_data=get_release(id)
+    relese_data=get_release(id)# get data
     texts=[]
     print(relese_data["paragraph"])
     def add_newline_every_n_words(text, n):
@@ -190,4 +189,4 @@ def convertData(id):
     images=[]
     for image in relese_data['imageList']:
         images.append(image)
-    return (images,texts)
+    return (images,texts) # desired format 

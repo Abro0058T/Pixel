@@ -49,3 +49,10 @@ def get_video_stats(current_user: dict = Depends(get_current_userinfo),
     total_rejected = db.videos.count_documents({"user_email":current_user["sub"], "status":"rejected"})
     total_pending = db.videos.count_documents({"user_email":current_user["sub"], "status":"pending"})
     return UserVideoStats(total_videos=total_videos, total_accepted=total_accepted, total_rejected=total_rejected, total_pending=total_pending)
+
+
+# /video/{prid}/edit for ediing video call 
+# text_list[] -same array as in data base
+# image[] updated array
+#video(image,text) 
+# 

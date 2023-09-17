@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from typing import List
-
+from datetime import datetime
 
 class ImageInfo(BaseModel):
     id: int
@@ -19,12 +19,12 @@ class VideoEditInfo(BaseModel):
 class Video(BaseModel):
     prid:int
     status: str="Generating"
-    url: str
+    url: str = None
     edit_history: List[VideoEditInfo] = None
-    user_email: str
-    datetime: str
-    ministry_name: str
-    heading: str
+    user_email: str =None
+    datetime: str =datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+    ministry_name: str = None
+    heading: str =  None
     images: List[ImageInfo] = None
     text_list: List[str] = None
     language: str="English"

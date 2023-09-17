@@ -6,6 +6,7 @@ from urllib.request import urlopen, Request
 from tempCodeRunnerFile import get_latest_release_id,get_release
 from mainVideo2 import video,convertData
 import pymongo
+from datetime import datetime
 
 client = pymongo.MongoClient("mongodb://localhost:27017/")
 
@@ -45,17 +46,18 @@ def detect():
 			else:
 				# notify
 				print("something changed")
-				latest_release_id=get_latest_release_id()
-				converted_data=convertData(latest_release_id)
+				latest_release_id=get_latest_release_id() # get latest notice prid
+				addData(latest_release_id)
+				converted_data=convertData(latest_release_id) #get latest notice data and convert it into required format 
 				images,texts=converted_data
-				video_data=video(images,texts)
-				addVideo(video_data)
+				video_data=video(images,texts) #convert to video and upload to cloudnary returns the url 
+				addVideo(video_data,converted_data,latest_release_id)  # add video to mongodb data base
 				# again read the website
 				response = urlopen(url).read()
 				# create a hash
 				currentHash = hashlib.sha224(response).hexdigest()
-				# wait for 30 seconds
-				time.sleep(30)
+				# wait for 600 seconds
+				time.sleep(600)
 				continue
 			
 		# To handle exceptions
@@ -63,17 +65,25 @@ def detect():
 			print("error")
 
 detect()
-def addVideo(video_data):
+def addVideo(video_data,converted_data,latest_release_id):# runs only  when new notice is uploaded
+	notice_data=get_release(latest_release_id)
+
 	data={
-		'prid':video_data["release_id"],
+		'prid':latest_release_id,
 		'status':'waiting',
-		'url':video_data['pageURL'],
+		'url':video_data,#cloudnaty url
 		"user_email":"",
-		"datetime":"date time ",
+		"datetime":datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
 		"ministry_name":"",
 		"heading":"",
-		"images":video_data["imageList"],
-		"text_list":video_data["paragraph"],
-		"languages":video_data["releaseLanguage"]
+		"images":converted_data[0],
+		"text_list":converted_data[1],
+		"languages":notice_data["releaseLanguage"]
 	}
 	result=collection.insert_one(data)
+
+def addData(latest_release_id):
+	data={
+		"prid":latest_release_id,
+	}
+	result=collection.insert_data["data"]
