@@ -13,6 +13,7 @@ class VideoEditInfo(BaseModel):
     language: str
     voice_gender:str
     ImageList: List[ImageInfo]
+    text_list: List[str] = None
 
 
 class Video(BaseModel):
@@ -25,4 +26,5 @@ class Video(BaseModel):
     ministry_name: str
     heading: str
     images: List[ImageInfo] = None
+    text_list: List[str] = None
     language: str
