@@ -1,7 +1,7 @@
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 
-from jose import jwt, JWTError
+from jose import jwt, JWTError, ExpiredSignatureError
 import bcrypt
 from core.settings import Settings
 
@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 
 reusesable_oauth2 = OAuth2PasswordBearer(
     tokenUrl="/api/login",
-    scheme_name="JWT-AUTH"
+    scheme_name="JWT"
 )
 
 def get_hashed_password(plain_text_password: str)->str:
@@ -41,17 +41,19 @@ def get_current_userinfo(token: str = Depends(reusesable_oauth2))->dict:
     """
     Get the current user info
     """
+    print(token)
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
+        detail="Could not validate credentials/Token expired",
         headers={"WWW-Authenticate":"Bearer"}
     )
     payload:dict = {}
     try:
-        payload = jwt.decode(token, Settings.JWT_SECRET_KEY, algorithms=[Settings.JWT_ALGORITHM])
+        payload = jwt.decode(token, Settings.JWT_SECRET_KEY, Settings.JWT_ALGORITHM)
         email: str = payload.get("sub")
         if email is None:
+            print("email is none")
             raise credentials_exception
-    except JWTError:
+    except JWTError as e2:
         raise credentials_exception
     return payload
