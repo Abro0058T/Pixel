@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 
 
 reusesable_oauth2 = OAuth2PasswordBearer(
-    tokenUrl="/login",
+    tokenUrl="/api/login",
     scheme_name="JWT-AUTH"
 )
 
