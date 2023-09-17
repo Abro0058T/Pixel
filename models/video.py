@@ -18,7 +18,7 @@ class VideoEditInfo(BaseModel):
 
 class Video(BaseModel):
     prid:int
-    status: str
+    status: str="Generating"
     url: str
     edit_history: List[VideoEditInfo] = None
     user_email: str
@@ -27,4 +27,4 @@ class Video(BaseModel):
     heading: str
     images: List[ImageInfo] = None
     text_list: List[str] = None
-    language: str
+    language: str="English"

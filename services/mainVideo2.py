@@ -147,10 +147,10 @@ def video(images,texts):
 
     # Write the final video to a file
     video_with_text.write_videofile("output_video.mp4")
-    # upload_result=cloudinary.uploader.upload("output_video.mp4",resource_type="video")
-    # print("Video uploaded to Cloudinary:", upload_result["secure_url"])
-    # return {"url":upload_result["secure_url"]}
-    print("working5")
+    upload_result=cloudinary.uploader.upload("output_video.mp4",resource_type="video")
+    print("Video uploaded to Cloudinary:", upload_result["secure_url"])
+    return url
+    # print("working5")
 image=["https://tse3.mm.bing.net/th?id=OIP.Vt3kGu4X6WQlmH91GpJpzgHaFH&pid=Api&P=0&h=180","https://tse1.mm.bing.net/th?id=OIP.1YM53mG10H_U25iPjop83QHaEo&pid=Api&P=0&h=180"]
 text=[
       {"text": "The Vice President, Shri Jagdeep Dhankhar today emphasized the need to promote\nIndia’s glorious cultural heritage of India, spanning over 5000 years. He called upon the  \n media to recognize our cultural heritage and expressed the need to protect, support and \n nurture our artists in a structured manner.","azure_text": "The Vice President, Shri Jagdeep Dhankhar today emphasized the need to promote India’s glorious cultural heritage of India, spanning over 5000 years. He called upon the  media to recognize our cultural heritage and expressed the need to protect, support and  nurture our artists in a structured manner.", "duration": 5, "position": ('left','center')},
@@ -158,36 +158,36 @@ text=[
       {"text":  """Addressing a gathering after conferring the Sangeet Natak Akademi Amrit Awards\nat Vigyan Bhawan, in New Delhi today, the Vice President expressed his happiness in \nhonoring the individuals whose contributions uphold the cultural heritage and pride of\n  the nation.""","azure_text":  """Addressing a gathering after conferring the Sangeet Natak Akademi Amrit Awards at Vigyan Bhawan, in New Delhi today, the Vice President expressed his happiness in honoring the individuals whose contributions uphold the cultural heritage and pride of the nation.""", "duration": 5, "position": (0.5,0.5)},
 ]
 
-relese_data=get_release(1958055)
-texts=[]
-print(relese_data["paragraph"])
-def add_newline_every_n_words(text, n):
-    # Split the text into words
-    words = text.split()
+def convertData(id):
+    relese_data=get_release(id)
+    texts=[]
+    print(relese_data["paragraph"])
+    def add_newline_every_n_words(text, n):
+        # Split the text into words
+        words = text.split()
 
-    # Check if there are more than n words
-    if len(words) <= n:
-        return text
+        # Check if there are more than n words
+        if len(words) <= n:
+            return text
 
-    # Create a list to hold lines of text with n words each
-    lines = []
-    for i in range(0, len(words), n):
-        line = " ".join(words[i:i + n])
-        lines.append(line)
+        # Create a list to hold lines of text with n words each
+        lines = []
+        for i in range(0, len(words), n):
+            line = " ".join(words[i:i + n])
+            lines.append(line)
 
-    # Join the lines with newline characters
-    result = "\n".join(lines)
+        # Join the lines with newline characters
+        result = "\n".join(lines)
 
-    return result
+        return result
 
-# Example usage:
-for text in relese_data["paragraph"]:
-    azure_text=text.replace("\n", "").replace("\r", "")
-    output_text = add_newline_every_n_words(text, 14)
-    texts.append({'text':output_text,"azure_text":azure_text, "position": ('left','center')})
+    # Example usage:
+    for text in relese_data["paragraph"]:
+        azure_text=text.replace("\n", "").replace("\r", "")
+        output_text = add_newline_every_n_words(text, 14)
+        texts.append({'text':output_text,"azure_text":azure_text, "position": ('left','center')})
 
-images=[]
-for image in relese_data['imageList']:
-    images.append(image)
-print(images)
-video(images,texts)
+    images=[]
+    for image in relese_data['imageList']:
+        images.append(image)
+    return (images,texts)
