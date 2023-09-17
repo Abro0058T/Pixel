@@ -9,6 +9,10 @@ import cloudinary.uploader
 import cloudinary.api
 from tempCodeRunnerFile import get_release
 
+from pymongo import MongoClient
+
+collection = MongoClient("mongodb://localhost:27017/")['pixel']['videos']
+
 cloudinary.config(
     cloud_name="dsztz2gsf",
     api_key="661837983169221",
@@ -20,7 +24,7 @@ cloudinary.config(
 from pydub import AudioSegment
 import zlib
 
-def video(images,texts):
+def video(images,texts, video_prid):
     
     # Audio file 
     audio_text=[]
@@ -33,6 +37,10 @@ def video(images,texts):
     # print(audio_text)'
     audio_text.append({"text":azure_final_text,"voice_gender":"Female"})
     # print(final_text)
+
+    # update video status to 'Analyzing Sound Data'
+    collection.update_one({"prid":video_prid},{"$set":{"status":"Analyzing Sound Data"}})
+
     url='https://8baf-2409-40d0-be-9fee-7d9a-3ad4-6a37-fcd6.ngrok-free.app/text_to_audio'
     data={
       "count": 1,
@@ -137,19 +145,31 @@ def video(images,texts):
         text_clip = text_clip.set_position(data["position"])
         text_clips.append(text_clip)
     # Composite the text clips onto the video clip
+
+    # update video status to 'Analysing & Generating Video'
+    collection.update_one({"prid":video_prid},{"$set":{"status":"Analysing & Generating Video"}})
+
     if len(images)!=0:
         video_with_text = CompositeVideoClip([video_clip,image,heading] + text_clips+image_frames)
     else:
         video_with_text = CompositeVideoClip([video_clip,image,heading] + text_clips)
 
-
+    # update video status to 'Uploading Video'
+    collection.update_one({"prid":video_prid},{"$set":{"status":"Uploading Video"}})
 
     # Write the final video to a file
     video_with_text.write_videofile("output_video.mp4")
     upload_result=cloudinary.uploader.upload("output_video.mp4",resource_type="video")
     print("Video uploaded to Cloudinary:", upload_result["secure_url"])
+
+    # update video status to 'Approval Pending'
+    collection.update_one({"prid",video_prid}, {"$set",{"status":"Approval Pending"}})
+
     return url
     # print("working5")
+
+
+
 image=["https://tse3.mm.bing.net/th?id=OIP.Vt3kGu4X6WQlmH91GpJpzgHaFH&pid=Api&P=0&h=180","https://tse1.mm.bing.net/th?id=OIP.1YM53mG10H_U25iPjop83QHaEo&pid=Api&P=0&h=180"]
 text=[
       {"text": "The Vice President, Shri Jagdeep Dhankhar today emphasized the need to promote\nIndia’s glorious cultural heritage of India, spanning over 5000 years. He called upon the  \n media to recognize our cultural heritage and expressed the need to protect, support and \n nurture our artists in a structured manner.","azure_text": "The Vice President, Shri Jagdeep Dhankhar today emphasized the need to promote India’s glorious cultural heritage of India, spanning over 5000 years. He called upon the  media to recognize our cultural heritage and expressed the need to protect, support and  nurture our artists in a structured manner.", "duration": 5, "position": ('left','center')},
