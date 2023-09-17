@@ -1,20 +1,38 @@
 from pydantic import BaseModel
 from typing import List
 
+class ImageInfo(BaseModel):
+    id: int
+    url: str
+    tags: List[str]
+
+
 class VideoEditInfo(BaseModel):
-    """
-    Model for video edit info
-    """
     datetime: str
-    edit_description: str
+    language: str
+    voice_gender:str
+    ImageList: List[ImageInfo]
 
 
 class VideoResponse(BaseModel):
-    """
-    Response model for video
-    """
     prid:int
     status: str
-    link: str
-    edit: List[VideoEditInfo]
+    url: str
+    edit_history: List[VideoEditInfo] = None
     user_email: str
+    datetime: str
+    ministry_name: str
+    heading: str
+    images: List[ImageInfo] = None
+    language: str
+
+
+class VideoListResponse(BaseModel):
+    videos:List[VideoResponse]
+
+
+class UserVideoStats(BaseModel):
+    total_videos: int
+    total_accepted: int
+    total_rejected: int
+    total_pending: int

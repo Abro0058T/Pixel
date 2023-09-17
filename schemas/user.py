@@ -36,3 +36,15 @@ class RegisterResponse(BaseModel):
     """
     status: str
     message: str
+
+class UserInfoResponse(BaseModel):
+    """
+    Response model for user information
+    """
+    first_name: str
+    last_name: str
+    email: str
+    aadhaar_no: str
+    is_email_verified: bool
+    is_aadhaar_verified: bool
+    account_created_on: str

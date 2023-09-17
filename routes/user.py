@@ -1,10 +1,10 @@
-from fastapi import APIRouter,Depends
+from fastapi import APIRouter,Depends, HTTPException
 
 from models.user import User
 from config.db import client
-from schemas.user import UserRegisterData, RegisterResponse, UserLoginData, LoginResponse
+from schemas.user import UserRegisterData, RegisterResponse, UserLoginData, LoginResponse, UserInfoResponse
 from core.db import get_db
-from core.security import get_hashed_password, verify_password, create_access_token
+from core.security import get_hashed_password, verify_password, create_access_token, get_current_userinfo
 
 from pymongo.database import Database
 
@@ -32,7 +32,7 @@ def register_user(user_data:UserRegisterData,
 
 
 
-@router.post("/login")
+@router.post("/login", response_model=LoginResponse, tags=["user"])
 def login_user(user_data:UserLoginData, 
                db:Database=Depends(get_db))->LoginResponse:
     """Login a user"""
@@ -49,3 +49,23 @@ def login_user(user_data:UserLoginData,
     else:
         return LoginResponse(status="failure",
                             message="User does not exist")
+    
+@router.get("/user_info", response_model=UserInfoResponse, tags=["user"])
+def get_user_info(current_user: dict = Depends(get_current_userinfo),
+                    db:Database = Depends(get_db))->UserInfoResponse:
+    """
+    Get user information
+    """
+    user = db.users.find_one({"email":current_user["sub"]})
+    if user:
+        return UserInfoResponse(
+            first_name=user["first_name"],
+            last_name=user["last_name"],
+            email=user["email"],
+            aadhaar_no=user["aadhaar_no"],
+            is_email_verified=user["is_email_verified"],
+            is_aadhaar_verified=user["is_aadhaar_verified"],
+            account_created_on=user["account_created_on"]
+        )
+    else:
+        raise HTTPException(status_code=404, detail="User not found")
