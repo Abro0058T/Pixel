@@ -4,7 +4,7 @@ import time
 import hashlib
 from urllib.request import urlopen, Request
 from tempCodeRunnerFile import get_latest_release_id,get_release
-from mainVideo2 import video,convertData
+from mainVideo2 import generate_video_task,convertData
 import pymongo
 from datetime import datetime
 
@@ -50,7 +50,7 @@ def detect():
 				addData(latest_release_id)
 				converted_data=convertData(latest_release_id) #get latest notice data and convert it into required format 
 				images,texts=converted_data
-				video_data=video(images,texts, latest_release_id) #convert to video and upload to cloudnary returns the url 
+				video_data=generate_video_task(images,texts, latest_release_id) #convert to video and upload to cloudnary returns the url 
 				addVideo(video_data,converted_data,latest_release_id)  # add video to mongodb data base
 				# again read the website
 				response = urlopen(url).read()

@@ -2,9 +2,9 @@ from pydantic import BaseModel
 from typing import List
 
 class ImageInfo(BaseModel):
-    id: int
+    # id: int
     url: str
-    tags: List[str]
+    tags: List[str] = None
 
 
 class VideoEditInfo(BaseModel):
@@ -12,7 +12,7 @@ class VideoEditInfo(BaseModel):
     language: str
     voice_gender:str
     ImageList: List[ImageInfo]
-    text_list: List[str] = None
+    # text_list: List[str] = None
 
 
 class VideoResponse(BaseModel):

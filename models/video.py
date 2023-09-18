@@ -3,17 +3,17 @@ from typing import List
 from datetime import datetime
 
 class ImageInfo(BaseModel):
-    id: int
+    # id: int
     url: str
-    tags: List[str]
+    tags: List[str] = None
 
 
 class VideoEditInfo(BaseModel):
     datetime: str
     language: str
     voice_gender:str
-    ImageList: List[ImageInfo]
-    text_list: List[str] = None
+    ImageList: List[ImageInfo] = None
+    # text_list: List[str] = None
 
 
 class Video(BaseModel):

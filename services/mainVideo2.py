@@ -24,7 +24,7 @@ cloudinary.config(
 from pydub import AudioSegment
 import zlib
 
-def video(images,texts, video_prid):
+async def generate_video_task(images,texts, video_prid):
     
     # Audio file 
     audio_text=[]
@@ -69,7 +69,8 @@ def video(images,texts, video_prid):
 
     else:
         print("error",response)
-        exit()
+        #exit()
+        return None
     net_time=0
     for audio in response.json()["audio"][:-1]:
         net_time+=audio["duration"]
